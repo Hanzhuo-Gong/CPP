@@ -1,0 +1,81 @@
+//This program will replace the sentence with the word chocolate to user input
+
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <ctime>
+using namespace std;
+
+//set up methods
+string quoteInArray();
+string getkeyString();
+string replaceString(string randomStr, string keyString);
+
+int main()
+{
+   string randomStr, keyString, finalStr;
+   srand((unsigned)time(0L));
+
+   //set up loop and call functions
+   while (true) {
+      keyString = getkeyString();
+      randomStr = quoteInArray();
+      finalStr = replaceString(randomStr, keyString);
+      cout << finalStr << endl;
+   }
+    return 0;
+}
+
+//Method for userInput
+string getkeyString(){
+   string userInput;
+   
+   cout << "Enter a noun (or phrase): ";
+   getline(cin, userInput);
+   return userInput;
+}
+
+//Method to set up the array
+string quoteInArray() {
+   const int ARRAY_SIZE = 15;
+   string array[ARRAY_SIZE], randomArray;
+   int randInt;
+
+   array[0] = "A little chocolate a day keeps the doctor at bay. - Marcia Carrington";
+   array[1] = "All you need is love. But a little chocolate now and then doesn't hurt. - Charles M. Schulz";
+   array[2] = "Anything is good if it's made of chocolate - Jo Brand";
+   array[3] = "Caramels are only a fad. Chocolate is a permanent thing. - Milton Snavely Hershey";
+   array[4] = "Chemically speaking, chocolate really is the world's perfect food. Michael Levine";
+   array[5] = "Chocolate is a perfect food, as wholesome as it is delicious, a beneficent restorer of "
+      "exhausted power. It is the best friend of those engaged in literary pursuits. - Justus Liebig";
+   array[6] = "Chocolate is medicinal. I just did another study that confirms it. - Michelle M. Pillow";
+   array[7] = "Chocolate is the only aromatherapy I need. - Jasmine Heiler";
+   array[8] = "Chocolate remedies adversity. - Jareb Teague";
+   array[9] = "Chocolate says 'I'm sorry' so much better than words. - Rachel Vincent";
+   array[10] = "Chocolate: The poor mans' champagne. - Daniel Worona";
+   array[11] = "Coffee and chocolate the inventor of mocha should be sainted. - Cherise Sinclair";
+   array[12] = "I never met a chocolate I didn't like. - Deanna Troi";
+   array[13] = "If I die eating chocolate, I'll die happy. - Cailey Sims";
+   array[14] = "If there's no chocolate in Heaven, I'm not going. - Jane Seabrook";
+
+   //pick a random array from above and return it
+   randInt = rand() % ARRAY_SIZE;
+   return array[randInt];
+}
+
+//Method to replace the keyString(word)
+string replaceString(string randomStr,string keyString) {
+   string resultStr;
+   istringstream iss(randomStr);
+   string word;
+   
+   //Divide the sentence word by word
+   while (iss >> word) {
+      if (word == "Chocolate" || word == "chocolate")
+         resultStr += keyString + " ";
+      else
+         resultStr += word + " ";
+   }
+   return resultStr;
+}
+
