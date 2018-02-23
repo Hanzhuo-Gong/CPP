@@ -1,0 +1,248 @@
+//The computer will choose a word and let user to guess it
+
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <ctime>
+using namespace std;
+
+//Class prototype
+class masterMind {
+private:
+   string secretWord, userInput;
+   int tries;
+public:
+   //Constructor
+   masterMind();
+   masterMind(string word, string input, int tries);
+
+   //Constant
+   static const int NUMBER_WORD = 4;
+   static const int DEFAULT_TRIES = 0;
+   static const string DEFAULT_WORD;
+   static const string DEFAULT_USER_INPUT;
+
+   //Mutator
+   bool setSecretWord(string randomWord);
+   bool setTries(int userTries);
+   bool setUserInput(string input);
+
+   //Accessor
+   const string getSecretWord() const { return secretWord; }
+   const int getTries() const { return tries; }
+   const string getUserInput() const { return userInput; }
+
+   //Methods for the class
+   static bool validString(const string& word);
+   bool checkWord(char inputWord);
+   string displaySymbol(string userWord);
+   string userInteraction();
+   void play();
+};
+
+//Global scope
+string pickRandomArray();
+string convertUpperLetter(string inputWord);
+void displayMessage();
+
+const int WORD_LENGTH = 4;
+const string masterMind::DEFAULT_WORD = "undefined word";
+const string masterMind::DEFAULT_USER_INPUT = "invalid input";
+
+int main()
+{
+   masterMind player;
+   string randomArray;
+   int initialTries = 0;
+
+   srand((unsigned)time(0L));
+   displayMessage();
+   randomArray = pickRandomArray();
+   player.setSecretWord(randomArray);
+   player.setTries(initialTries);
+   player.play();
+
+    return 0;
+}
+
+//Constructor
+masterMind::masterMind() {
+   secretWord = DEFAULT_WORD;
+   userInput = DEFAULT_USER_INPUT;
+   tries = DEFAULT_TRIES;
+}
+
+masterMind::masterMind(string word, string input, int tries) {
+   if (!setSecretWord(word))
+      secretWord = DEFAULT_WORD;
+   if (!setUserInput(input))
+      userInput = DEFAULT_USER_INPUT;
+   if (!setTries(tries))
+      this->tries = DEFAULT_TRIES;
+}
+
+//Check for validation
+bool masterMind::validString(const string& word) {
+   if (word.length() != NUMBER_WORD)
+      return false;
+   for (int i = 0; i < word.length(); i++) {
+      if (!isalpha(word[i])) {
+         return false;
+      }
+   }
+   return true;
+}
+
+//Check letter by letter
+bool masterMind::checkWord(char inputWord) {
+   bool match = false;
+   int index = 0;
+   while (index < NUMBER_WORD) {
+      if (inputWord == secretWord[index])
+         return true;
+      index++;
+   }
+   return match;
+}
+
+//Display the symbol to the user
+string masterMind::displaySymbol(string userWord) {
+   string symbol = "";
+   for (int i = 0; i < NUMBER_WORD; i++) {
+      if (secretWord[i] == userWord[i])
+         symbol += "*";
+      else if (checkWord(userWord[i]))
+         symbol += "-";
+      else
+         symbol += " ";
+   }
+   if (symbol == "    ")
+      symbol = "Oops, you got nothing, please try again.";
+   else if (symbol == "****") {
+      stringstream message;
+      message << "Computer: Congratulation, you got the right word! "
+         << getTries() << " tries " << endl;
+      symbol = message.str();
+   }
+   return symbol;
+}
+
+//Method to return to final result
+void masterMind::play() {
+   bool endGame = false;
+   int initialTries = 0;
+   
+   while (!endGame) {
+      string userStr = userInteraction();
+      if (userStr == "Q") {
+         cout << "you have quit the game, have a nice day!" << endl;
+         break;
+      }
+      setUserInput(userStr);
+      initialTries++;
+      setTries(initialTries);
+      cout << displaySymbol(userStr) << endl;
+      if (getSecretWord() == getUserInput())
+         endGame = true;
+   }
+}
+
+//Mutators
+bool masterMind::setSecretWord(string randomWord) {
+   if (!validString(randomWord))
+      return false;
+   secretWord = randomWord;
+   return true;
+}
+
+bool masterMind::setUserInput(string input) {
+   if (!validString(input))
+      return false;
+   userInput = input;
+   return true;
+}
+
+bool masterMind::setTries(int userTries) {
+   if (userTries < DEFAULT_TRIES)
+      return false;
+   tries = userTries;
+   return true;
+}
+
+//Pick a random string
+string pickRandomArray() {
+   string listWords[] = {
+      "ADAM", "ALAN", "ALEX", "AMIR", "AMOS", "ANDY", "ANNA", "ANNE",
+      "ARNE", "AXEL", "BART", "BERT", "BETH", "BILL", "BOYD", "BRAD",
+      "BRET", "CARL", "CARY", "CASE", "CHET", "CHIP", "CLAY", "CLEM",
+      "COLE", "CORY", "CRIS", "CURT", "DALE", "DANA", "DANI", "DAVE",
+      "DAWN", "DEAN", "DEBI", "DICK", "DION", "DIRK", "DONN", "DORI",
+      "DORY", "DOUG", "DREW", "DUKE", "EARL", "EDDY", "ELSA", "EMIL",
+      "EMMA", "ERIC", "ERIK", "EVAN", "FRED", "GAIL", "GALE", "GARY",
+      "GENE", "GIGI", "GILL", "GLEN", "GREG", "HANK", "HANS", "HARV",
+      "HEIN", "HERB", "HOHN", "HUEY", "HUGH", "HUME", "HURF", "ILYA",
+      "IZZY", "JACK", "JANE", "JARL", "JEAN", "JEFF", "JESS", "JILL",
+      "JIRI", "JOCK", "JOEL", "JOHN", "JONG", "JONI", "JOON", "JOSE",
+      "JOSH", "JUAN", "JUDY", "JUHA", "JUNE", "JURI", "KARI", "KARL",
+      "KATE", "KEES", "KENN", "KENT", "KIKI", "KING", "KIRK", "KNUT",
+      "KORY", "KRIS", "KURT", "KYLE", "KYLO", "LANA", "LARS", "LEIF",
+      "LEON", "LILA", "LISA", "LIST", "LIZA", "LOIS", "LORD", "LORI",
+      "LOYD", "LUIS", "LUKE", "LYNN", "MANN", "MARA", "MARC", "MARK",
+      "MARY", "MATS", "MATT", "MAYO", "MICK", "MIEK", "MIKE", "MIKI",
+      "MILO", "MOTT", "NAIM", "NATE", "NEAL", "NEIL", "NHAN", "NICI",
+      "NICK", "NILS", "NING", "NOAM", "NORA", "NORM", "NOVO", "OFER",
+      "OLAF", "OLEG", "OLOF", "OMAR", "OWEN", "OZAN", "PAGE", "PART",
+      "PAUL", "PETE", "PETR", "PHIL", "PIET", "PING", "PRIA", "RAIF",
+      "RAJA", "RALF", "RAND", "RAUL", "RAVI", "REAL", "REES", "REID",
+      "RENU", "RICH", "RICK", "ROLF", "ROOT", "ROSS", "RUDY", "RUSS",
+      "RUTH", "SAAD", "SAUL", "SCOT", "SEAN", "SETH", "SHAI", "SHAW",
+      "SHEL", "SKEF", "SKIP", "STAN", "SYED", "SYUN", "TAIT", "TERI",
+      "THAD", "THEO", "TIMO", "TOBY", "TODD", "TOFT", "TONY", "TRAN",
+      "TREY", "TROY", "TUAN", "TUNA", "VERN", "VICE", "VICK", "WADE",
+      "WALT", "WILL", "WOLF"
+   };
+   int randomIndex;
+   int arraySize = sizeof(listWords) / sizeof(listWords[0]);
+   randomIndex = rand() % arraySize;
+   return listWords[randomIndex];
+}
+
+//Convertion to Upper Letter
+string convertUpperLetter(string inputWord) {
+   string upperWord = "";
+   for (int i = 0; i < inputWord.length(); i++) {
+      upperWord += toupper(inputWord[i]);
+   }
+   return upperWord;
+}
+
+//Method to interact with user
+string masterMind::userInteraction() {
+   string userStr;
+
+   while (true) {
+      cout << "Your Guess(press Q to quit): ";
+      getline(cin, userStr);
+      userStr = convertUpperLetter(userStr);
+
+      if (userStr == "Q") {
+         break;
+      }
+
+      if (!masterMind::validString(userStr)) {
+         cout << "Invalid word entered. Please re-enter again." << endl;
+      }
+      else
+         break;
+   }
+   return userStr;
+}
+
+//Method for display message
+void displayMessage() {
+   cout << "Computer: I have a 4 letter in mind. Can you guess it?" << endl;
+   cout << "\nComputer: * means one of the letters is right and "
+      << "in the right place" << endl;
+   cout << "Computer: - means one of the letters is right and "
+      << "in the wrong place" << endl;
+}
