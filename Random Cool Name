@@ -1,0 +1,29 @@
+//This program will create a random cool name from the list
+#include <iostream>
+#include <string>
+#include <ctime>
+#include <time.h>
+using namespace std;
+
+string createCoolName(int length) {
+   string upperLetter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+          lowerLetter = "abcdefghijklmnopqrstuvwxyz";
+   //?
+   bool lastLowerLetter = (double)rand() / RAND_MAX > 0.5;
+
+   string name = "";
+   for (int k = 0; k < length; k++) {
+      name += lastLowerLetter ? upperLetter[rand() % upperLetter.length()] :
+                                lowerLetter[rand() % lowerLetter.length()];
+      lastLowerLetter = !lastLowerLetter;
+   }
+   return name;
+}
+int main()
+{
+   srand((unsigned)time(0L));
+   string coolName = createCoolName(4);
+   cout << "A cool name is " << coolName << endl;
+    return 0;
+}
+
